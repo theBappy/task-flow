@@ -1,7 +1,9 @@
 {
-    "cSpell.words": [
-        "Bappy",
-        "nums",
-        "appwrite"
-    ]
+  "cSpell.words": ["Bappy", "nums", "appwrite"],
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.wordWrap": "on",
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
 }
