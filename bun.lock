@@ -44,6 +44,7 @@
         "lucide-react": "^0.542.0",
         "next": "14.2.14",
         "next-themes": "^0.4.6",
+        "node-appwrite": "14.0.0",
         "react": "^18",
         "react-day-picker": "^9.9.0",
         "react-dom": "^18",
@@ -51,6 +52,7 @@
         "react-icons": "^5.5.0",
         "react-resizable-panels": "^3.0.5",
         "recharts": "^2.15.4",
+        "server-only": "^0.0.1",
         "sonner": "^2.0.7",
         "tailwind-merge": "^3.3.1",
         "tailwindcss-animate": "^1.0.7",
@@ -742,6 +744,10 @@
 
     "next-themes": ["next-themes@0.4.6", "", { "peerDependencies": { "react": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc", "react-dom": "^16.8 || ^17 || ^18 || ^19 || ^19.0.0-rc" } }, "sha512-pZvgD5L0IEvX5/9GWyHMf3m8BKiVQwsCMHfoFosXtXBMnaS0ZnIJ9ST4b4NqLVKDEm8QBxoNNGNaBv2JNF6XNA=="],
 
+    "node-appwrite": ["node-appwrite@14.0.0", "", { "dependencies": { "node-fetch-native-with-agent": "1.7.2" } }, "sha512-pPynEAmhep1rNHpv2UqsZfM7FbtDX7y+nRRZS/IP5CMDznMu8PBqzFD2WbbQIvVCv3MEDRY5xpXbPfyxbysCPQ=="],
+
+    "node-fetch-native-with-agent": ["node-fetch-native-with-agent@1.7.2", "", {}, "sha512-5MaOOCuJEvcckoz7/tjdx1M6OusOY6Xc5f459IaruGStWnKzlI1qpNgaAwmn4LmFYcsSlj+jBMk84wmmRxfk5g=="],
+
     "normalize-path": ["normalize-path@3.0.0", "", {}, ""],
 
     "object-assign": ["object-assign@4.1.1", "", {}, ""],
@@ -873,6 +879,8 @@
     "scheduler": ["scheduler@0.23.2", "", { "dependencies": { "loose-envify": "^1.1.0" } }, ""],
 
     "semver": ["semver@6.3.1", "", { "bin": "bin/semver.js" }, ""],
+
+    "server-only": ["server-only@0.0.1", "", {}, "sha512-qepMx2JxAa5jjfzxG79yPPq+8BuFToHd1hm7kI+Z4zAq1ftQiP7HcxMhDDItrbtwVeLg/cY2JnKnrcFkmiswNA=="],
 
     "set-function-length": ["set-function-length@1.2.2", "", { "dependencies": { "define-data-property": "^1.1.4", "es-errors": "^1.3.0", "function-bind": "^1.1.2", "get-intrinsic": "^1.2.4", "gopd": "^1.0.1", "has-property-descriptors": "^1.0.2" } }, ""],
 
