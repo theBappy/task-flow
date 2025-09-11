@@ -5,7 +5,7 @@ import { QueryProvider } from "@/components/query-provider";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner"
 
 
 const inter = Inter({
