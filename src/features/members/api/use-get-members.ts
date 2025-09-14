@@ -10,7 +10,7 @@ export const useGetMembers = ({ workspaceId }: useGetMembersProps) => {
     queryKey: ["members", workspaceId],
     queryFn: async () => {
       const response = await client.api.members.$get({
-        param: { workspaceId },
+        query: { workspaceId },
       });
 
       if (!response.ok) {
