@@ -95,7 +95,7 @@ export const MembersList = () => {
                     <DropdownMenuItem
                       className="font-medium"
                       onClick={() =>
-                        handleUpdateMember(member.$.id, MemberRole.ADMIN)
+                        handleUpdateMember(member.$id, MemberRole.ADMIN)
                       }
                       disabled={isUpdatingMember}
                     >
@@ -104,7 +104,7 @@ export const MembersList = () => {
                     <DropdownMenuItem
                       className="font-medium"
                       onClick={() =>
-                        handleUpdateMember(member.$.id, MemberRole.MEMBER)
+                        handleUpdateMember(member.$id, MemberRole.MEMBER)
                       }
                       disabled={isUpdatingMember}
                     >
@@ -112,7 +112,7 @@ export const MembersList = () => {
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       className="font-medium text-amber-700"
-                      onClick={() => handleDeleteMember(member.$.id)}
+                      onClick={() => handleDeleteMember(member.$id)}
                       disabled={isDeletingMember}
                     >
                       Remove {member.name}
