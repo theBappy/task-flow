@@ -2,13 +2,14 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Task } from "../types";
-import { ArrowUpDown } from "lucide-react";
+import { ArrowUpDown, MoreVerticalIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ProjectLogo } from "@/features/projects/components/project-logo";
 import { MemberAvatar } from "@/features/workspaces/components/member-avatar";
 import { TaskDate } from "./task-date";
 import { Badge } from "@/components/ui/badge";
 import { snakeCaseToTileCase } from "@/lib/utils";
+import { TaskActions } from "./task-actions";
 
 export const columns: ColumnDef<Task>[] = [
   {
@@ -117,6 +118,21 @@ export const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const status = row.original.status;
       return <Badge variant={status}>{snakeCaseToTileCase(status)}</Badge>;
+    },
+  },
+  {
+    id: "actions",
+    cell: ({ row }) => {
+      const id = row.original.$id;
+      const projectId = row.original.projectId;
+
+      return (
+        <TaskActions id={id} projectId={projectId}>
+          <Button variant="ghost" className="size-8 p-0">
+            <MoreVerticalIcon className="size-4 " />
+          </Button>
+        </TaskActions>
+      );
     },
   },
 ];
