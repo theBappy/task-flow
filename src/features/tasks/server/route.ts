@@ -11,6 +11,7 @@ import { createAdminClient } from "@/lib/appwrite";
 import { Project } from "@/features/projects/types";
 
 const app = new Hono()
+
   .post(
     "/bulk-update",
     sessionMiddleware,
@@ -50,7 +51,7 @@ const app = new Hono()
         return c.json({ error: "All tasks must belong to the same workspace" });
       }
       const workspaceId = workspaceIds.values().next().value;
-      
+
       if (!workspaceId) {
         return c.json({ error: "Workspace ID not found" }, 400);
       }
