@@ -110,11 +110,6 @@ export const EditWorkspaceForm = ({ onCancel, initialValues }: Props) => {
       {
         form: finalValues,
         param: { workspaceId: initialValues.$id },
-      },
-      {
-        onSuccess: ({ data }) => {
-          form.reset();
-        },
       }
     );
   };
