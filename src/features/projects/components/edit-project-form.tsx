@@ -1,9 +1,9 @@
 "use client";
 
+import { z } from "zod";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { updateProjectSchema } from "../schemas";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -24,7 +24,6 @@ import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Project } from "../types";
 import { useUpdateProject } from "../api/use-update-project";
-useConfirm;
 import { useConfirm } from "@/features/workspaces/hooks/use-confirm";
 import { useDeleteProject } from "../api/use-delete-project";
 

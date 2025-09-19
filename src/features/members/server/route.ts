@@ -30,9 +30,11 @@ const app = new Hono()
           return c.json({ error: "Unauthorized" }, 401);
         }
 
-        const members = await databases.listDocuments<Member>(DATABASE_ID, MEMBERS_ID, [
-          Query.equal("workspaceId", workspaceId),
-        ]);
+        const members = await databases.listDocuments<Member>(
+          DATABASE_ID,
+          MEMBERS_ID,
+          [Query.equal("workspaceId", workspaceId)]
+        );
 
         const populatedMembers = await Promise.all(
           members.documents.map(async (doc) => {
@@ -51,8 +53,11 @@ const app = new Hono()
             documents: populatedMembers,
           },
         });
-      } catch (err: any) {
-        return c.json({ error: err.message || "Something went wrong" }, 500);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          return c.json({ error: err.message }, 500);
+        }
+        return c.json({ error: "Something went wrong" }, 500);
       }
     }
   )
@@ -85,7 +90,10 @@ const app = new Hono()
       }
 
       // Only admin can delete other members
-      if (member.$id !== memberToDelete.$id && member.role !== MemberRole.ADMIN) {
+      if (
+        member.$id !== memberToDelete.$id &&
+        member.role !== MemberRole.ADMIN
+      ) {
         return c.json({ error: "Unauthorized" }, 401);
       }
 
@@ -105,8 +113,11 @@ const app = new Hono()
       await databases.deleteDocument(DATABASE_ID, MEMBERS_ID, memberId);
 
       return c.json({ data: { $id: memberToDelete.$id } });
-    } catch (err: any) {
-      return c.json({ error: err.message || "Something went wrong" }, 500);
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        return c.json({ error: err.message }, 500);
+      }
+      return c.json({ error: "Something went wrong" }, 500);
     }
   })
   .patch(
@@ -142,7 +153,10 @@ const app = new Hono()
           return c.json({ error: "Unauthorized" }, 401);
         }
 
-        if (member.$id !== memberToUpdate.$id && member.role !== MemberRole.ADMIN) {
+        if (
+          member.$id !== memberToUpdate.$id &&
+          member.role !== MemberRole.ADMIN
+        ) {
           return c.json({ error: "Unauthorized" }, 401);
         }
 
@@ -158,11 +172,16 @@ const app = new Hono()
           return c.json({ error: "Cannot downgrade the only admin" }, 400);
         }
 
-        await databases.updateDocument(DATABASE_ID, MEMBERS_ID, memberId, { role });
+        await databases.updateDocument(DATABASE_ID, MEMBERS_ID, memberId, {
+          role,
+        });
 
         return c.json({ data: { $id: memberToUpdate.$id } });
-      } catch (err: any) {
-        return c.json({ error: err.message || "Something went wrong" }, 500);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          return c.json({ error: err.message }, 500);
+        }
+        return c.json({ error: "Something went wrong" }, 500);
       }
     }
   );
