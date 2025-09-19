@@ -1,7 +1,7 @@
 "use client";
 
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {z} from "zod"
+import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -15,7 +15,6 @@ import {
 import { DottedSeparator } from "@/components/custom/dotted-separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { createTaskSchema } from "../schemas";
 import { useCreateTask } from "../api/use-create-task";
@@ -32,6 +31,10 @@ import { MemberAvatar } from "@/features/workspaces/components/member-avatar";
 import { TaskStatus } from "../types";
 import { ProjectLogo } from "@/features/projects/components/project-logo";
 
+// Omit workspaceId since it comes from context
+const schema = createTaskSchema.omit({ workspaceId: true });
+type CreateTaskFormValues = z.infer<typeof schema>;
+
 interface CreateTaskFormProps {
   onCancel?: () => void;
   projectOptions: { id: string; name: string; imageUrl: string }[];
@@ -44,17 +47,21 @@ export const CreateTaskForm = ({
   memberOptions,
 }: CreateTaskFormProps) => {
   const workspaceId = useWorkspaceId();
-  const router = useRouter();
   const { mutate, isPending } = useCreateTask();
 
-  const form = useForm<z.infer<typeof createTaskSchema>>({
-    resolver: zodResolver(createTaskSchema.omit({ workspaceId: true })),
+  const form = useForm<CreateTaskFormValues>({
+    resolver: zodResolver(schema),
     defaultValues: {
-      workspaceId,
+      name: "",
+      dueDate: undefined,
+      assigneeId: "",
+      status: TaskStatus.BACKLOG,
+      projectId: "",
+      description: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createTaskSchema>) => {
+  const onSubmit = (values: CreateTaskFormValues) => {
     mutate(
       { json: { ...values, workspaceId } },
       {
@@ -71,13 +78,16 @@ export const CreateTaskForm = ({
       <CardHeader className="flex p-7">
         <CardTitle className="text-xl font-bold">Create a new task</CardTitle>
       </CardHeader>
+
       <div className="px-7">
         <DottedSeparator />
       </div>
+
       <CardContent className="p-7">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
+              {/* Task Name */}
               <FormField
                 control={form.control}
                 name="name"
@@ -91,35 +101,38 @@ export const CreateTaskForm = ({
                   </FormItem>
                 )}
               />
-              <FormField
+
+              {/* Due Date */}
+              <Controller
                 control={form.control}
                 name="dueDate"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Due Date</FormLabel>
                     <FormControl>
-                      <DatePicker {...field} />
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Assignee */}
               <FormField
                 control={form.control}
                 name="assigneeId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Assignee</FormLabel>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select assignee" />
                         </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
                       <SelectContent>
                         {memberOptions.map((member) => (
                           <SelectItem key={member.id} value={member.id}>
@@ -134,59 +147,50 @@ export const CreateTaskForm = ({
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Status */}
               <FormField
                 control={form.control}
                 name="status"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Status</FormLabel>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select status" />
                         </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
                       <SelectContent>
-                        <SelectItem value={TaskStatus.BACKLOG}>
-                          Backlog
-                        </SelectItem>
-                        <SelectItem value={TaskStatus.IN_PROGRESS}>
-                          In Progress
-                        </SelectItem>
-                        <SelectItem value={TaskStatus.IN_REVIEW}>
-                          In Review
-                        </SelectItem>
+                        <SelectItem value={TaskStatus.BACKLOG}>Backlog</SelectItem>
+                        <SelectItem value={TaskStatus.IN_PROGRESS}>In Progress</SelectItem>
+                        <SelectItem value={TaskStatus.IN_REVIEW}>In Review</SelectItem>
                         <SelectItem value={TaskStatus.TODO}>TODO</SelectItem>
                         <SelectItem value={TaskStatus.DONE}>DONE</SelectItem>
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
 
+              {/* Project */}
               <FormField
                 control={form.control}
                 name="projectId"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Project Assigned</FormLabel>
-                    <Select
-                      defaultValue={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select project" />
                         </SelectTrigger>
                       </FormControl>
-                      <FormMessage />
                       <SelectContent>
                         {projectOptions.map((project) => (
                           <SelectItem key={project.id} value={project.id}>
@@ -202,11 +206,14 @@ export const CreateTaskForm = ({
                         ))}
                       </SelectContent>
                     </Select>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+
             <DottedSeparator className="py-7" />
+
             <div className="flex items-center justify-between">
               <Button
                 type="button"
@@ -218,7 +225,7 @@ export const CreateTaskForm = ({
               >
                 Cancel
               </Button>
-              <Button disabled={isPending} type="submit" size="lg">
+              <Button type="submit" size="lg" disabled={isPending}>
                 Create Task
               </Button>
             </div>

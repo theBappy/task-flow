@@ -33,22 +33,24 @@ export const CreateProjectForm = ({ onCancel }: Props) => {
   const workspaceId = useWorkspaceId();
   const router = useRouter();
   const { mutate, isPending } = useCreateProject();
-
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const form = useForm<z.infer<typeof createProjectSchema>>({
-    resolver: zodResolver(createProjectSchema.omit({ workspaceId: true })),
+  const schema = createProjectSchema.omit({ workspaceId: true });
+
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
     defaultValues: {
       name: "",
     },
   });
 
-  const onSubmit = (values: z.infer<typeof createProjectSchema>) => {
+  const onSubmit = (values: z.infer<typeof schema>) => {
     const finalValues = {
       ...values,
       workspaceId,
       image: values.image instanceof File ? values.image : "",
     };
+
     mutate(
       { form: finalValues },
       {
@@ -81,6 +83,7 @@ export const CreateProjectForm = ({ onCancel }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
             <div className="flex flex-col gap-y-4">
+              {/* Project Name */}
               <FormField
                 control={form.control}
                 name="name"
@@ -88,12 +91,14 @@ export const CreateProjectForm = ({ onCancel }: Props) => {
                   <FormItem>
                     <FormLabel>Project Name</FormLabel>
                     <FormControl>
-                      <Input {...field} placeholder="Enter workspace name" />
+                      <Input {...field} placeholder="Enter project name" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
+              {/* Project Image */}
               <FormField
                 control={form.control}
                 name="image"
@@ -167,7 +172,9 @@ export const CreateProjectForm = ({ onCancel }: Props) => {
                 )}
               />
             </div>
+
             <DottedSeparator className="py-7" />
+
             <div className="flex items-center justify-between">
               <Button
                 type="button"
